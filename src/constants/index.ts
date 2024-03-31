@@ -33,14 +33,14 @@ export const AdmMenu: elMenuProps['items'] = [
 export const DropDownMenu: elMenuProps['items'] = [
 	{
 		key: 'changeuser',
-		label: '<div>切换账号</div>',
+		label: '切换账号',
 	},
 	{
 		key: 'changepwd',
-		label:' <div>修改密码</div>',
+		label:' 修改密码',
 	},
 	{
 		key: 'logout',
-		label:' <div>退出登录</div>',
+		label:' 退出登录',
 	},
 ]

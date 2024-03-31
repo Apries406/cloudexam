@@ -1,68 +1,88 @@
 <template>
-  <div></div>
+  <div>
+    <el-container class="'Layout'">
+      <el-header class="Header">
+        <div class="HeaderContent">
+          <h1 class="HeaderTitle">CloudExam</h1>
+          <el-menu
+            theme="light"
+            mode="horizontal"
+            class="HeaderMenu"
+            :style="{ height: '72px' }"
+          >
+            <template v-for="item in AdmMenu" :key="item.key">
+              <el-menu-item
+                :index="item.key"
+                @click="
+                  (e) => {
+                    breadRouterStore.clearRouter();
+                    breadRouterStore.pushRouter({
+                      title: (e.target as HTMLElement).innerText,
+                      path: e.key,
+                    });
+                    router.push(e.key);
+                  }
+                "
+              >
+                <template #title>
+                  {{ item.label }}
+                </template>
+              </el-menu-item>
+            </template>
+          </el-menu>
+          <el-dropdown placement="bottom">
+            <userInfo />
+            <arrow-down />
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item v-for="item in DropDownMenu">
+                  {{ item.label }}
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+        </div>
+      </el-header>
+      <el-content class="Content">
+        <div class="bread">
+          <el-breadcrumb separator=">">
+            <el-breadcrumb-item
+              v-for="(item, index) in breadRouterStore.router"
+              :key="index"
+              :to="{ path: item.path }"
+              @click="
+                () => {
+                  breadRouterStore.clearRouter();
+                  breadRouterStore.pushRouter({
+                    title: item.title,
+                    path: item.path,
+                  });
+                }
+              "
+            >
+              {{ item.title }}
+            </el-breadcrumb-item>
+          </el-breadcrumb>
+        </div>
+        <div class="ContentContainer">
+          <router-view />
+        </div>
+      </el-content>
+      <el-footer class="Footer"></el-footer>
+    </el-container>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { onMounted } from "vue";
 import { useBreadRouterStore } from "@/store/useBreadRouterStore";
+import { useRouter } from "vue-router";
+import { AdmMenu, DropDownMenu } from "src/constants";
+import userInfo from "./components/UserInfo/userInfo.vue";
+import { ArrowDown } from "@element-plus/icons-vue";
 const breadRouterStore = useBreadRouterStore();
-
+const router = useRouter();
 onMounted(() => {});
 </script>
 
-<style lang="scss" scoped >
-$header_height: 72px;
-$base_color: #4088ff;
-$gray_text_color: #909399;
-$none_bg_color: #f2f3f5;
-
-.Layout {
-  height: 100%;
-  .Header {
-    height: $header_height;
-    background-color: #ffffff;
-    margin-bottom: 20px;
-    .HeaderContent {
-      height: $header_height;
-      margin: 0 auto;
-      max-width: 1200px;
-      display: flex;
-      align-items: center;
-      .HeaderTitle {
-        height: 100%;
-        font-size: 32px;
-        font-weight: bold;
-        color: $base_color;
-        margin-right: 20px;
-      }
-      .HeaderMenu {
-        & > li:hover {
-          color: $base_color;
-          background-color: lighten($base_color, 30%);
-        }
-      }
-      .userInfoContainer {
-        margin-left: auto;
-        cursor: pointer;
-      }
-    }
-  }
-  .Content {
-    background-color: $none_bg_color;
-    width: 1200px;
-    height: 100%;
-    margin: 0 auto;
-    .bread {
-      font-size: 20px;
-      margin-bottom: 20px;
-    }
-    .ContentContainer {
-      padding: 20px;
-      background-color: #ffffff;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-  }
-}
-
-</style>
+<style lang="scss" scoped></style>
